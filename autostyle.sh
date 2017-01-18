@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function doLibrary {
-    autopep8 $1 --in-place
+    autopep8 $1 --in-place -r
 }
 
 function doExecutable {
@@ -9,7 +9,6 @@ function doExecutable {
     chmod +x $1
 }
 
-doLibrary ./src/client.py
-doLibrary ./src/server.py
-doLibrary ./src/clientCore/__init__.py
-doLibrary ./src/serverCore/__init__.py
+doLibrary Shop
+doLibrary ShopApp
+doExecutable manage.py
