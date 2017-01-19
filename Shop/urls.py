@@ -16,9 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from ShopApp.views import notLoggedClient
+from ShopApp.views import Index
 
 urlpatterns = [
-    #url(r'^admin/', admin.site.urls),
-    url(r'ShopApp/$', notLoggedClient),
+    url(r'^admin/', admin.site.urls),
+    url(r'^$', Index.as_view(), name='example'),
 ]
