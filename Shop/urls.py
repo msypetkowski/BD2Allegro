@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from ShopApp.views import Index
+from ShopApp.views import Index, OfferView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', Index.as_view(), name='example'),
+    url(r'^$', Index.as_view(), name='homePage'),
+    url(r'^offers/(?P<offerId>[0-99999]+)/$',
+        OfferView.as_view(), name='transactionView'),
 ]

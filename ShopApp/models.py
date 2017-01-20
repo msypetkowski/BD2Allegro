@@ -27,7 +27,7 @@ class Offer(models.Model):
     endDate = models.DateTimeField('end_date')
 
     def __str__(self):
-        return self.title
+        return self.user.login + ':' + self.title
 
 
 class Transaction(models.Model):

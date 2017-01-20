@@ -1,0 +1,43 @@
+<h1>
+Internet shop home page
+</h1>
+
+<h3>
+Debug info:
+</h3>
+
+<h4> Request Params: </h4>
+{{requestParams}}
+<br>
+
+<h4> Request Cookies: </h4>
+{{requestCookies}}
+<br>
+
+<hr>
+
+<h3>
+List of registered users:
+</h3>
+{% if usersList %}
+    <ul>
+    {% for user in usersList %}
+        <li>{{user}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No users are registered.</p>
+{% endif %}
+
+<h3>
+List of offers:
+</h3>
+{% if offersList %}
+    <ul>
+    {% for offer in offersList %}
+        <li><a href="/offers/{{ offer.id }}/">{{ offer }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No offers are available.</p>
+{% endif %}
