@@ -2,23 +2,42 @@
 Internet shop home page
 </h1>
 
-<h3>
-Debug info:
-</h3>
-
-<h4> Request Params: </h4>
-{{requestParams}}
-<br>
-
-<h4> Request Cookies: </h4>
-{{requestCookies}}
-<br>
+<hr>
+<h3> Logged in as: </h3>
+{{loggedAs}} <br> <br>
+Login options:
+{% if loggedAs %}
+    <li><a href="/logout/">log out</a></li>
+{% else %}
+    <li><a href="/login/">log in</a></li>
+{% endif %}
 
 <hr>
+<h3> List of my offers: </h3>
+{% if myOffersList %}
+    <ul>
+    {% for offer in myOffersList %}
+        <li><a href="/offers/{{ offer.id }}/">{{ offer }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No offers are available.</p>
+{% endif %}
 
-<h3>
-List of registered users:
-</h3>
+<hr>
+<h3> List of all offers in database: </h3>
+{% if offersList %}
+    <ul>
+    {% for offer in offersList %}
+        <li><a href="/offers/{{ offer.id }}/">{{ offer }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No offers are available.</p>
+{% endif %}
+
+<hr>
+<h3> List of all registered users in database: </h3>
 {% if usersList %}
     <ul>
     {% for user in usersList %}
@@ -29,15 +48,9 @@ List of registered users:
     <p>No users are registered.</p>
 {% endif %}
 
-<h3>
-List of offers:
-</h3>
-{% if offersList %}
-    <ul>
-    {% for offer in offersList %}
-        <li><a href="/offers/{{ offer.id }}/">{{ offer }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No offers are available.</p>
-{% endif %}
+<hr>
+<h3> Debug info: </h3>
+<h4> Request Params: </h4>
+{{requestParams}} <br>
+<h4> Request Cookies: </h4>
+{{requestCookies}} <br>

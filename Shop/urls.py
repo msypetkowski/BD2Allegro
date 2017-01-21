@@ -16,11 +16,14 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from ShopApp.views import Index, OfferView
+from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', Index.as_view(), name='homePage'),
+    url(r'^login/$', LoginView.as_view(), name='loginView'),
+    url(r'^logout/$', LogoutView.as_view(), name='logoutView'),
+    url(r'^loginConfirm/$', LoginViewConfirm.as_view(), name='loginViewConfirm'),
     url(r'^offers/(?P<offerId>[0-99999]+)/$',
         OfferView.as_view(), name='transactionView'),
 ]

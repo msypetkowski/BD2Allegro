@@ -1,17 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User as DjangoUser
 
 
 class User(models.Model):
-    login = models.CharField(max_length=200)
-    # passwordHash = models.CharField('password_hash', max_length=200)
-    email = models.CharField(max_length=200)
+    djangoUser = models.OneToOneField(DjangoUser)
     status = models.IntegerField(default=1)
 
     def __str__(self):
         return '(l:{}, email:{}, status:)'.format(
-            self.login,
+            self.djangoUser.username,
             # self.passwordHash,
-            self.email,
+            self.djangoUser.email,
             self.status,
         )
 
@@ -27,7 +26,7 @@ class Offer(models.Model):
     endDate = models.DateTimeField('end_date')
 
     def __str__(self):
-        return self.user.login + ':' + self.title
+        return self.user.djangoUser.username + ':' + self.title
 
 
 class Transaction(models.Model):
@@ -39,6 +38,6 @@ class Transaction(models.Model):
     paymentStatus = models.IntegerField('payment_status')
 
     def __str__(self):
-        return self.user.login + ':' + self.offer.title
+        return self.user.djangoUser.username + ':' + self.offer.title
 
 # TODO: write other classes
