@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView
+from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView, AccountPanel
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^loginConfirm/$', LoginViewConfirm.as_view(), name='loginViewConfirm'),
     url(r'^offers/(?P<offerId>[0-99999]+)/$',
         OfferView.as_view(), name='transactionView'),
+    url(r'^account/$', AccountPanel.as_view(), name='accountView'),
 ]

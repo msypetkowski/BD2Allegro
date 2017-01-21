@@ -1,6 +1,4 @@
-<h1>
-Internet shop home page
-</h1>
+<h1> Internet shop home page </h1>
 
 <hr>
 <h3> Logged in as: </h3>
@@ -8,9 +6,11 @@ Internet shop home page
 Login options:
 {% if loggedAs %}
     <li><a href="/logout/">log out</a></li>
+    <li><a href="/account/">manage account</a></li>
 {% else %}
     <li><a href="/login/">log in</a></li>
 {% endif %}
+
 
 <hr>
 <h3> List of my offers: </h3>

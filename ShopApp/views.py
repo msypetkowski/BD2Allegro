@@ -33,6 +33,30 @@ class Index(View):
         return HttpResponse(template.render(context, request))
 
 
+class AccountPanel(View):
+    '''
+    Client view for managing account.
+    '''
+
+    def get(self, request):
+        user = None
+        if request.user.is_authenticated:
+            user = request.user
+        else:
+            raise Http404("Not valid user")
+
+        # FIXME: mabe database query not iteration?
+        myOffersList = [o for o in Offer.objects.all()
+                        if o.user.djangoUser == user]
+
+        template = loader.get_template('accountPanel.html')
+        context = {
+            'loggedAs': user,
+            'myOffersList': myOffersList,
+        }
+        return HttpResponse(template.render(context, request))
+
+
 class OfferView(View):
 
     def get(self, request, offerId):
