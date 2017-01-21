@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.template import loader
-
 from django.views import View
-from .models import User, Offer, Offer
 from django.contrib.auth import authenticate, login, logout
+from django.db.utils import IntegrityError
+
+from .models import User, Offer, Offer
 
 
 class Index(View):
@@ -105,11 +106,13 @@ class LoginViewConfirm(View):
             code = 'Logging in...'
             code += '<head>'
             code += '<meta http-equiv="refresh" content="0; url=/" />'
-            code += '/<head>'
+            code += '</head>'
             return HttpResponse(code)
         else:
             code = 'Wrong login'
+            code += '<head>'
             code += '<meta http-equiv="refresh" content="0; url=/login/?invalidLogin=true" />'
+            code += '</head>'
             return HttpResponse(code)
 
 
@@ -121,5 +124,55 @@ class LogoutView(View):
         code = 'Logging out...'
         code += '<head>'
         code += '<meta http-equiv="refresh" content="0; url=/" />'
-        code += '/<head>'
+        code += '</head>'
         return HttpResponse(code)
+
+
+class RegisterAccountView(View):
+
+    def get(self, request):
+        template = loader.get_template('registerUser.html')
+
+        invalidData = False
+        if ('invalidData' in request.GET.keys()
+                and request.GET['invalidData'] == 'true'):
+            invalidData = True
+        context = {
+            'invalidData': invalidData,
+        }
+        return HttpResponse(template.render(context, request))
+
+
+class RegisterAccountViewConfirm(View):
+
+    def get(self, request):
+
+        password = request.GET['passwd']
+        passwordConfirm = request.GET['passwdConfirm']
+        if password != passwordConfirm:
+            succeed = False
+        else:
+            try:
+                succeed = True
+                User.addUser(
+                    username=request.GET['login'],
+                    password=request.GET['passwd'],
+                    name=request.GET['name'],
+                    surname=request.GET['surname'],
+                    email=request.GET['email'],
+                )
+            except IntegrityError:
+                succeed = False
+
+        if succeed:
+            code = 'Creating user'
+            code += '<head>'
+            code += '<meta http-equiv="refresh" content="0; url=/" />'
+            code += '</head>'
+            return HttpResponse(code)
+        else:
+            code = 'Wrong data'
+            code += '<head>'
+            code += '<meta http-equiv="refresh" content="0; url=/register/?invalidData=true" />'
+            code += '</head>'
+            return HttpResponse(code)

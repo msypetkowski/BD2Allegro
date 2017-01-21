@@ -14,6 +14,21 @@ class User(models.Model):
             self.status,
         )
 
+    @classmethod
+    def addUser(cls, username, password, name, surname, email):
+        djangoUser = DjangoUser.objects.create_user(
+            username=username,
+            password=password,
+            first_name=name,
+            last_name=surname,
+            email=email,
+        )
+
+        cls.objects.create(
+            djangoUser=djangoUser,
+            status=1,
+        )
+
 
 class Offer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

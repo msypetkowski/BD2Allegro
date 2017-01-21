@@ -9,20 +9,9 @@ Login options:
     <li><a href="/account/">manage account</a></li>
 {% else %}
     <li><a href="/login/">log in</a></li>
+    <li><a href="/register/">create account</a></li>
 {% endif %}
 
-
-<hr>
-<h3> List of my offers: </h3>
-{% if myOffersList %}
-    <ul>
-    {% for offer in myOffersList %}
-        <li><a href="/offers/{{ offer.id }}/">{{ offer }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No offers are available.</p>
-{% endif %}
 
 <hr>
 <h3> List of all offers in database: </h3>
