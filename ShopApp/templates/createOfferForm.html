@@ -1,0 +1,20 @@
+<h1> Create new offer </h1>
+
+<hr>
+<form action="/createOfferConfirm/">
+  title: <input type="text" name="title"> <br>
+  description: <input type="text" name="desc"> <br>
+  price: <input type="text" name="price"> <br>
+  availableItems: <input type="text" name="count"> <br>
+  days to expire: <input type="text" name="days"> <br>
+  <input type="submit" value="Create offer">
+</form>
+
+{% if invalidData %}
+<font color="red">
+    entered invalid offer data
+</font>
+{% endif %}
+
+<hr>
+<li><a href="/">return to home page</a></li>

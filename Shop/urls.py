@@ -18,6 +18,7 @@ from django.contrib import admin
 
 from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView, AccountPanel
 from ShopApp.views import RegisterAccountView, RegisterAccountViewConfirm
+from ShopApp.views import CreateNewOfferView, CreateNewOfferConfirm
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,4 +32,7 @@ urlpatterns = [
     url(r'^register/$', RegisterAccountView.as_view(), name='registerAccountView'),
     url(r'^registerConfirm/$', RegisterAccountViewConfirm.as_view(),
         name='registerAccountViewConfirm'),
+    url(r'^createOffer/$', CreateNewOfferView.as_view(), name='createOfferView'),
+    url(r'^createOfferConfirm/$', CreateNewOfferConfirm.as_view(),
+        name='createOfferConfirm'),
 ]

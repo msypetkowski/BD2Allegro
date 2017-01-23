@@ -7,6 +7,9 @@ from django.db.utils import IntegrityError
 
 from .models import User, Offer, Offer
 
+from django.utils import timezone
+from datetime import timedelta
+
 
 class Index(View):
     '''
@@ -174,5 +177,63 @@ class RegisterAccountViewConfirm(View):
             code = 'Wrong data'
             code += '<head>'
             code += '<meta http-equiv="refresh" content="0; url=/register/?invalidData=true" />'
+            code += '</head>'
+            return HttpResponse(code)
+
+
+class CreateNewOfferView(View):
+
+    def get(self, request):
+        template = loader.get_template('createOfferForm.html')
+
+        invalidData = False
+        if ('invalidData' in request.GET.keys()
+                and request.GET['invalidData'] == 'true'):
+            invalidData = True
+        context = {
+            'invalidData': invalidData,
+        }
+        return HttpResponse(template.render(context, request))
+
+
+class CreateNewOfferConfirm(View):
+
+    def get(self, request):
+        user = None
+        if request.user.is_authenticated:
+            user = request.user
+        else:
+            raise Http404("Not valid user")
+
+        try:
+            title = request.GET['title']
+            description = request.GET['desc']
+            price = int(request.GET['price'])
+            availableItems = int(request.GET['count'])
+            days = int(request.GET['days'])
+            succeed = True
+        except ValueError:
+            succeed = False
+
+        if succeed:
+            user = User.objects.filter(djangoUser=user)[0]
+            Offer.objects.create(
+                title=title,
+                description=description,
+                price=price,
+                availableItems=availableItems,
+                startDate=timezone.now(),
+                endDate=timezone.now() + timedelta(days=days),
+                user=user,
+            )
+            code = 'Creating offer'
+            code += '<head>'
+            code += '<meta http-equiv="refresh" content="0; url=/" />'
+            code += '</head>'
+            return HttpResponse(code)
+        else:
+            code = 'Wrong data'
+            code += '<head>'
+            code += '<meta http-equiv="refresh" content="0; url=/createOffer/?invalidData=true" />'
             code += '</head>'
             return HttpResponse(code)
