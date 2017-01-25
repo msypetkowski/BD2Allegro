@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView, AccountPanel
+from ShopApp.views import Index, OfferView, LoginView, LoginViewConfirm, LogoutView, AccountPanel, UserProfileView
 from ShopApp.views import RegisterAccountView, RegisterAccountViewConfirm
 from ShopApp.views import CreateNewOfferView, CreateNewOfferConfirm, BuyOfferConfirm
 from ShopApp.views import TransactionView
@@ -40,4 +40,6 @@ urlpatterns = [
         name='buyOfferConfirm'),
     url(r'^transactions/(?P<transactionId>[0-99999]+)/$',
         TransactionView.as_view(), name='transactionView'),
+    url(r'^users/(?P<userId>[0-99999]+)/$',
+        UserProfileView.as_view(), name='userProfileView'),
 ]

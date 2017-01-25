@@ -8,9 +8,9 @@
 <h3>Offer</h3>
 <a href="/offers/{{transaction.offer.id}}/">{{transaction.offer}}</a>
 <h3>Seller</h3>
-{{transaction.offer.user}}
+<a href="/users/{{transaction.offer.user.id}}/">{{transaction.offer.user}}</a>
 <h3>Buyer</h3>
-{{transaction.user}}
+<a href="/users/{{transaction.user.id}}/">{{transaction.user}}</a>
 <h3>Number of items</h3>
 {{transaction.numberOfItems}}
 <h3>Date</h3>

@@ -75,6 +75,31 @@ class AccountPanel(View):
         return HttpResponse(template.render(context, request))
 
 
+class UserProfileView(View):
+
+    def get(self, request, userId):
+        try:
+            user = User.objects.get(pk=userId)
+        except User.DoesNotExist:
+            raise Http404("User does not exist")
+
+        user = None
+        if request.user.is_authenticated:
+            user = request.user
+
+        displayedUser = User.objects.get(id=userId)
+
+        offers = Offer.objects.filter(user=displayedUser)
+
+        template = loader.get_template('userProfile.html')
+        context = {
+            'loggedAs': user,
+            'user': displayedUser,
+            'offers': offers,
+        }
+        return HttpResponse(template.render(context, request))
+
+
 class OfferView(View):
 
     def get(self, request, offerId):
