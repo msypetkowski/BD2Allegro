@@ -64,8 +64,8 @@ class AccountPanel(View):
         myOffersList = Offer.objects.filter(user=user)
 
         # TODO:
-        myBuyTransactions = []
-        mySellTransactions = []
+        myBuyTransactions = Transaction.objects.filter(user=user)
+        mySellTransactions = Transaction.objects.filter(offer__user=user)
 
         template = loader.get_template('accountPanel.html')
         context = {
@@ -89,11 +89,17 @@ class OfferView(View):
         if request.user.is_authenticated:
             user = request.user
 
+        invalidData = False
+        if ('invalidData' in request.GET.keys()
+                and request.GET['invalidData'] == 'true'):
+            invalidData = True
+
         offer = Offer.objects.get(id=offerId)
         template = loader.get_template('offerViewTemplate.html')
         context = {
             'loggedAs': user,
             'offer': offer,
+            'invalidData': invalidData,
         }
         return HttpResponse(template.render(context, request))
 
@@ -233,3 +239,60 @@ class CreateNewOfferConfirm(View):
         else:
             code = getRedirectCode('/createOffer/', {'invalidData': 'true'})
             return HttpResponse(code)
+
+
+class BuyOfferConfirm(View):
+
+    def get(self, request):
+        user = getUser(request)
+
+        try:
+            count = int(request.GET['count'])
+            offerId = int(request.GET['offerId'])
+            succeed = True
+        except ValueError:
+            succeed = False
+
+        # FIXME: synchronization (mutex) and check if still possible
+
+        if succeed:
+            offer = Offer.objects.filter(id=offerId)[0]
+            if count > offer.availableItems:
+                succeed = False
+
+        if succeed:
+            newTransaction = Transaction.objects.create(
+                user=user,
+                offer=offer,
+                numberOfItems=count,
+                date=timezone.now(),
+                paymentStatus=0,
+            )
+            newAvailableItems = offer.availableItems - count
+            Offer.objects.filter(id=offerId).update(
+                availableItems=newAvailableItems)
+            code = 'Create Transaction'
+            code = getRedirectCode('/transactions/' + str(newTransaction.id))
+            return HttpResponse(code)
+        else:
+            code = getRedirectCode(
+                '/offers/' + str(offerId), {'invalidData': 'true'})
+            return HttpResponse(code)
+
+
+class TransactionView(View):
+
+    def get(self, request, transactionId):
+        try:
+            transaction = Transaction.objects.get(pk=transactionId)
+        except Transaction.DoesNotExist:
+            raise Http404("Transaction does not exist")
+
+        user = getUser(request)
+
+        template = loader.get_template('transactionViewTemplate.html')
+        context = {
+            'loggedAs': user,
+            'transaction': transaction,
+        }
+        return HttpResponse(template.render(context, request))

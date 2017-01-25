@@ -20,5 +20,20 @@
 <h3>Expiration date</h3>
 {{offer.endDate}}
 
+{% if loggedAs != offer.user and loggedAs != None%}
+<hr>
+<h3> Buy offer: </h3>
+<form action="/buyOfferConfirm/">
+  items count: <input type="text" name="count"> <br>
+  <input type="hidden" name="offerId" value="{{ offer.id }}">
+  <input type="submit" value="Buy">
+</form>
+    {% if invalidData %}
+    <font color="red">
+        entered invalid items count
+    </font>
+    {% endif %}
+{% endif %}
+
 <hr>
 <li><a href="/">return to home page</a></li>

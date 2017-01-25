@@ -1,0 +1,23 @@
+<h1> Offer Details </h1>
+
+<hr>
+<h3> Logged in as: </h3>
+{{loggedAs}} <br>
+
+<hr>
+<h3>Offer</h3>
+<a href="/offers/{{transaction.offer.id}}/">{{transaction.offer}}</a>
+<h3>Seller</h3>
+{{transaction.offer.user}}
+<h3>Buyer</h3>
+{{transaction.user}}
+<h3>Number of items</h3>
+{{transaction.numberOfItems}}
+<h3>Date</h3>
+{{transaction.date}}
+<h3>Payment status</h3>
+{{transaction.paymentStatus}}
+
+
+<hr>
+<li><a href="/">return to home page</a></li>
