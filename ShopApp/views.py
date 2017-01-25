@@ -47,8 +47,6 @@ class Index(View):
             'loggedAs': user,
             'offersList': Offer.objects.all(),
             'usersList': User.objects.all(),
-            'requestParams': ','.join(map(str, request.GET.items())),
-            'requestCookies': '\n'.join(map(str, request.COOKIES.items())),
         }
         return HttpResponse(template.render(context, request))
 
