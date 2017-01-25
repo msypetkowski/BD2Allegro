@@ -17,6 +17,30 @@
 {% endif %}
 
 <hr>
+<h3> List of my transactions as buyer: </h3>
+{% if myBuyTransactions or myBuyTransactions.empty%}
+    <ul>
+    {% for transaction in myBuyTransactions %}
+        <li><a href="/transactions/{{ transaction.id }}/">{{ transaction }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No 'buy' transactions are available.</p>
+{% endif %}
+
+<hr>
+<h3> List of my transactions as seller: </h3>
+{% if mySellTransactions or mySellTransactions.empty%}
+    <ul>
+    {% for transaction in mySellTransactions %}
+        <li><a href="/transactions/{{ transaction.id }}/">{{ transaction }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No 'sell' transactions are available.</p>
+{% endif %}
+
+<hr>
 <li><a href="/createOffer/">create new offer</a></li>
 
 <hr>

@@ -5,10 +5,31 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.db.utils import IntegrityError
 
-from .models import User, Offer, Offer
+from .models import User, Offer, Transaction
 
 from django.utils import timezone
 from datetime import timedelta
+
+
+def getUser(request):
+    user = None
+    if request.user.is_authenticated:
+        user = request.user
+        user = User.objects.filter(djangoUser=user)[0]
+    else:
+        raise Http404("Not valid user")
+    return user
+
+
+def getRedirectCode(url, params=dict()):
+    code = ''
+    code += '<head>'
+    code += '<meta http-equiv="refresh" content="0; url={url}?{params}" />'.format(
+        url=url,
+        params='&'.join(k + '=' + v for k, v in params.items()),
+    )
+    code += '</head>'
+    return code
 
 
 class Index(View):
@@ -21,15 +42,10 @@ class Index(View):
         if request.user.is_authenticated:
             user = request.user
 
-        # FIXME: mabe database query not iteration?
-        myOffersList = [o for o in Offer.objects.all()
-                        if o.user.djangoUser == user]
-
         template = loader.get_template('mainPageTemplate.html')
         context = {
             'loggedAs': user,
             'offersList': Offer.objects.all(),
-            'myOffersList': myOffersList,
             'usersList': User.objects.all(),
             'requestParams': ','.join(map(str, request.GET.items())),
             'requestCookies': '\n'.join(map(str, request.COOKIES.items())),
@@ -43,20 +59,20 @@ class AccountPanel(View):
     '''
 
     def get(self, request):
-        user = None
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            raise Http404("Not valid user")
+        user = getUser(request)
 
-        # FIXME: mabe database query not iteration?
-        myOffersList = [o for o in Offer.objects.all()
-                        if o.user.djangoUser == user]
+        myOffersList = Offer.objects.filter(user=user)
+
+        # TODO:
+        myBuyTransactions = []
+        mySellTransactions = []
 
         template = loader.get_template('accountPanel.html')
         context = {
             'loggedAs': user,
             'myOffersList': myOffersList,
+            'myBuyTransactions': myBuyTransactions,
+            'mySellTransactions': mySellTransactions,
         }
         return HttpResponse(template.render(context, request))
 
@@ -107,15 +123,11 @@ class LoginViewConfirm(View):
         if user is not None:
             login(request, user)
             code = 'Logging in...'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/" />'
-            code += '</head>'
+            code += getRedirectCode('/')
             return HttpResponse(code)
         else:
             code = 'Wrong login'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/login/?invalidLogin=true" />'
-            code += '</head>'
+            code += getRedirectCode('/login/', {'invalidLogin': 'true'})
             return HttpResponse(code)
 
 
@@ -125,9 +137,7 @@ class LogoutView(View):
         logout(request)
 
         code = 'Logging out...'
-        code += '<head>'
-        code += '<meta http-equiv="refresh" content="0; url=/" />'
-        code += '</head>'
+        code += getRedirectCode('/')
         return HttpResponse(code)
 
 
@@ -169,15 +179,11 @@ class RegisterAccountViewConfirm(View):
 
         if succeed:
             code = 'Creating user'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/" />'
-            code += '</head>'
+            code += getRedirectCode('/')
             return HttpResponse(code)
         else:
             code = 'Wrong data'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/register/?invalidData=true" />'
-            code += '</head>'
+            code += getRedirectCode('/register/', {'invalidData': 'true'})
             return HttpResponse(code)
 
 
@@ -199,11 +205,7 @@ class CreateNewOfferView(View):
 class CreateNewOfferConfirm(View):
 
     def get(self, request):
-        user = None
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            raise Http404("Not valid user")
+        user = getUser(request)
 
         try:
             title = request.GET['title']
@@ -216,7 +218,6 @@ class CreateNewOfferConfirm(View):
             succeed = False
 
         if succeed:
-            user = User.objects.filter(djangoUser=user)[0]
             Offer.objects.create(
                 title=title,
                 description=description,
@@ -227,13 +228,8 @@ class CreateNewOfferConfirm(View):
                 user=user,
             )
             code = 'Creating offer'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/" />'
-            code += '</head>'
+            code = getRedirectCode('/account/')
             return HttpResponse(code)
         else:
-            code = 'Wrong data'
-            code += '<head>'
-            code += '<meta http-equiv="refresh" content="0; url=/createOffer/?invalidData=true" />'
-            code += '</head>'
+            code = getRedirectCode('/createOffer/', {'invalidData': 'true'})
             return HttpResponse(code)

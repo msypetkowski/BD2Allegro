@@ -7,11 +7,9 @@ class User(models.Model):
     status = models.IntegerField(default=1)
 
     def __str__(self):
-        return '(l:{}, email:{}, status:)'.format(
+        return '(login:{}, email:{})'.format(
             self.djangoUser.username,
-            # self.passwordHash,
             self.djangoUser.email,
-            self.status,
         )
 
     @classmethod
@@ -53,6 +51,10 @@ class Transaction(models.Model):
     paymentStatus = models.IntegerField('payment_status')
 
     def __str__(self):
-        return self.user.djangoUser.username + ':' + self.offer.title
+        return ('{}:{}:{}:{}'.format(
+                self.user.djangoUser.username,
+                self.offer.user.djangoUser.username,
+                self.offer.title,
+                self.date))
 
 # TODO: write other classes
