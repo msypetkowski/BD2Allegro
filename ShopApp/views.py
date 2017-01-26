@@ -11,13 +11,14 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-def getUser(request):
+def getUser(request, mustBeValid=True):
     user = None
     if request.user.is_authenticated:
         user = request.user
         user = User.objects.filter(djangoUser=user)[0]
     else:
-        raise Http404("Not valid user")
+        if mustBeValid:
+            raise Http404("Not valid user")
     return user
 
 
@@ -38,7 +39,7 @@ class Index(View):
     '''
 
     def get(self, request):
-        user = getUser(request)
+        user = getUser(request, False)
 
         template = loader.get_template('mainPageTemplate.html')
         context = {
@@ -81,7 +82,7 @@ class UserProfileView(View):
         except User.DoesNotExist:
             raise Http404("User does not exist")
 
-        user = getUser(request)
+        user = getUser(request, False)
 
         displayedUser = User.objects.get(id=userId)
 
@@ -104,7 +105,7 @@ class OfferView(View):
         except Offer.DoesNotExist:
             raise Http404("Offer does not exist")
 
-        user = getUser(request)
+        user = getUser(request, False)
 
         invalidData = False
         if ('invalidData' in request.GET.keys()

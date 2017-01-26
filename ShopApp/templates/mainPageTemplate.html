@@ -1,4 +1,6 @@
+{% include "style.html" %}
 <h1> Internet shop home page </h1>
+
 
 <div class="loggedAsBar">
     {% include "userLoginBar.html" %}
@@ -13,7 +15,6 @@ Login options:
 {% endif %}
 
 
-<hr>
 <h3> List of all offers in database: </h3>
 {% if offersList %}
     <ul>
@@ -25,7 +26,6 @@ Login options:
     <p>No offers are available.</p>
 {% endif %}
 
-<hr>
 <h3> List of all registered users in database: </h3>
 {% if usersList %}
     <ul>

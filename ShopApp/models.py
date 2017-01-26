@@ -7,10 +7,11 @@ class User(models.Model):
     status = models.IntegerField(default=1)
 
     def __str__(self):
-        return 'User(login:{}, email:{})'.format(
-            self.djangoUser.username,
-            self.djangoUser.email,
-        )
+        # return 'User(login:{}, email:{})'.format(
+        #     self.djangoUser.username,
+        #     self.djangoUser.email,
+        # )
+        return self.djangoUser.username
 
     @classmethod
     def addUser(cls, username, password, name, surname, email):
@@ -39,7 +40,8 @@ class Offer(models.Model):
     endDate = models.DateTimeField('end_date')
 
     def __str__(self):
-        return 'Offer(' + self.user.djangoUser.username + ':' + self.title + ')'
+        #return 'Offer(' + self.user.djangoUser.username + ':' + self.title + ')'
+        return '{} : {}'.format(self.title, self.user)
 
 
 class Transaction(models.Model):

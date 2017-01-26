@@ -1,10 +1,10 @@
+{% include "style.html" %}
 <h1> Account management</h1>
 
 <div class="loggedAsBar">
     {% include "userLoginBar.html" %}
 </div>
 
-<hr>
 <h3> List of my offers: </h3>
 {% if myOffersList %}
     <ul>
@@ -16,7 +16,6 @@
     <p>No offers are available.</p>
 {% endif %}
 
-<hr>
 <h3> List of my transactions as buyer: </h3>
 {% if myBuyTransactions or myBuyTransactions.empty%}
     <ul>
@@ -28,7 +27,6 @@
     <p>No 'buy' transactions are available.</p>
 {% endif %}
 
-<hr>
 <h3> List of my transactions as seller: </h3>
 {% if mySellTransactions or mySellTransactions.empty%}
     <ul>
