@@ -38,9 +38,7 @@ class Index(View):
     '''
 
     def get(self, request):
-        user = None
-        if request.user.is_authenticated:
-            user = request.user
+        user = getUser(request)
 
         template = loader.get_template('mainPageTemplate.html')
         context = {
@@ -83,9 +81,7 @@ class UserProfileView(View):
         except User.DoesNotExist:
             raise Http404("User does not exist")
 
-        user = None
-        if request.user.is_authenticated:
-            user = request.user
+        user = getUser(request)
 
         displayedUser = User.objects.get(id=userId)
 
@@ -108,9 +104,7 @@ class OfferView(View):
         except Offer.DoesNotExist:
             raise Http404("Offer does not exist")
 
-        user = None
-        if request.user.is_authenticated:
-            user = request.user
+        user = getUser(request)
 
         invalidData = False
         if ('invalidData' in request.GET.keys()
@@ -220,6 +214,7 @@ class CreateNewOfferView(View):
 
     def get(self, request):
         template = loader.get_template('createOfferForm.html')
+        user = getUser(request)
 
         invalidData = False
         if ('invalidData' in request.GET.keys()
@@ -227,6 +222,7 @@ class CreateNewOfferView(View):
             invalidData = True
         context = {
             'invalidData': invalidData,
+            'loggedAs': user,
         }
         return HttpResponse(template.render(context, request))
 

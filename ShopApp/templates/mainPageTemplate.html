@@ -1,8 +1,8 @@
 <h1> Internet shop home page </h1>
 
-<hr>
-<h3> Logged in as: </h3>
-{{loggedAs}} <br> <br>
+<div class="loggedAsBar">
+    {% include "userLoginBar.html" %}
+</div>
 Login options:
 {% if loggedAs %}
     <li><a href="/logout/">log out</a></li>
@@ -30,7 +30,7 @@ Login options:
 {% if usersList %}
     <ul>
     {% for user in usersList %}
-        <li>{{user}}</li>
+        <li><a href="/users/{{user.id}}/">{{user}}</a></li>
     {% endfor %}
     </ul>
 {% else %}

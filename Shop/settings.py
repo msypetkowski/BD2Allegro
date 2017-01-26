@@ -68,6 +68,16 @@ TEMPLATES = [
     },
 ]
 
+#SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+# TEMPLATE_DIRS = (
+#     os.path.join(BASE_DIR, 'templates'),
+# )
+
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
+
 WSGI_APPLICATION = 'Shop.wsgi.application'
 
 
